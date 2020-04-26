@@ -2,40 +2,55 @@ const form = document.querySelector("#book-form")
 const titleElement = document.querySelector("#title")
 const directorElement = document.querySelector("#director")
 const urlElement = document.querySelector("#url")
+const cardBody = document.querySelectorAll(".card-body")[1]
+const clear = document.querySelector("#clear-books")
 
-//add new uı 
-const ui = new UI()
-//add new storage
-const storage = new Storage()
 eventlistener()
 
-function eventlistener(){
-    form.addEventListener("submit",addBook)
-    document.addEventListener("DOMContentLoaded",()=>{
-        let books = storage.getBookToStorage()
-        console.log(books)
-        ui.loadedAllBooks(books)
+function eventlistener() {
+    form.addEventListener("submit", addBook)
+    document.addEventListener("DOMContentLoaded", () => {
+        let books = Storage.getBookToStorage()
+        UI.loadedAllBooks(books)
     })
+    cardBody.addEventListener("click", deleteBook)
+    clear.addEventListener("click", clearBooks)
 }
-function addBook(e){
+function addBook(e) {
     const title = titleElement.value
     const director = directorElement.value
     const url = urlElement.value
 
-    if(title == "" || director == "" || url == ""){
+    if (title == "" || director == "" || url == "") {
         //error
-        ui.alertMessage("Fill all fields","danger")
+        UI.alertMessage("Fill all fields", "danger")
     }
-    else{
-        const newBook = new Book(title,director,url)
-        ui.addBookToUI(newBook)
-        storage.addBookToStorage(newBook)
-        ui.alertMessage("Add book succesful","success")
+    else {
+        const newBook = new Book(title, director, url)
+        UI.addBookToUI(newBook)
+        Storage.addBookToStorage(newBook)
+        UI.alertMessage("Add book succesful", "success")
 
 
     }
 
-    ui.clearInputs(titleElement,directorElement,urlElement)
+    UI.clearInputs(titleElement, directorElement, urlElement)
 
     e.preventDefault()
 }
+
+function deleteBook(e) {
+
+    if (e.target.id == "delete-book") {
+        UI.deleteBookToUI(e.target)
+        Storage.deleteBookToStorage(e.target.parentElement.previousElementSibling.previousElementSibling.textContent)
+        UI.alertMessage("Delete Book Successful", "success")
+    }
+}
+
+function clearBooks(e) {
+    if (confirm("Clear All Books ??")) {
+        UI.deleteAllBooksFromUI()
+        Storage.deleteAllBooksFromStorage()
+    }
+}   

@@ -1,23 +1,41 @@
 class Storage {
 
-}
-
-Storage.prototype.addBookToStorage = function(newbook){
-    let books = this.getBookToStorage()
-    books.push(newbook)
-    localStorage.setItem("books",JSON.stringify(books))
-}
-
-Storage.prototype.getBookToStorage = function(){
-    let books
-    if(localStorage.getItem("books") == null){
-        
-        books = []
+    //add Book Storage
+    static addBookToStorage(newbook) {
+        let books = this.getBookToStorage()
+        books.push(newbook)
+        localStorage.setItem("books", JSON.stringify(books))
     }
-    else{
-        books = JSON.parse(localStorage.getItem("books"))
+    //get Book Storage
+    static getBookToStorage() {
+        let books
+        if (localStorage.getItem("books") == null) {
 
+            books = []
+        }
+        else {
+            books = JSON.parse(localStorage.getItem("books"))
+
+        }
+
+        return books
     }
 
-    return books
+    static deleteBookToStorage(bookTitle) {
+
+        let books = this.getBookToStorage()
+
+        books.forEach((book, index) => {
+            if (book.title == bookTitle) {
+                books.splice(index, 1)
+            }
+        });
+
+        localStorage.setItem("books", JSON.stringify(books))
+    }
+
+    static deleteAllBooksFromStorage() {
+        localStorage.removeItem("books")
+    }
+
 }
